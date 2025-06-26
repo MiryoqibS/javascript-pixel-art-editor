@@ -1,0 +1,35 @@
+@use "sass:math";
+
+@mixin hover {
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            cursor: pointer;
+            @content;
+        }
+    }
+
+    @media (hover: none) {
+        &:active {
+            @content;
+        }
+    }
+}
+
+@mixin font-include($min, $max) {
+    font-size: clamp(#{$min}px,
+        #{math.div($max, 1440) * 100}vw,
+        #{$max}px,
+    );
+}
+
+@mixin square($size) {
+    width: $size;
+    height: $size;
+    aspect-ratio: 1;
+}
+
+@mixin flex-center() {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

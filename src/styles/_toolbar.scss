@@ -1,0 +1,179 @@
+@use "./mixins" as m;
+
+.toolbar {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    background-color: var(--color-light);
+    border: var(--border);
+    padding-block: 10px;
+    padding-inline: var(--container-padding-x);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+
+    &-action {
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+        background-color: var(--color-light);
+        border: var(--border);
+        padding-block: 10px;
+        padding-inline: var(--container-padding-x);
+        border-radius: var(--radius);
+
+        &__title {
+            @include m.font-include(16, 20);
+
+            font-weight: 500;
+
+            &.small {
+                @include m.font-include(14, 16);
+            }
+        }
+
+        &__button {
+            @include m.font-include(12, 14);
+            @include m.flex-center;
+
+            column-gap: 6px;
+            padding-block: 8px;
+            padding-inline: var(--container-padding-x);
+            width: fit-content;
+            border: var(--border);
+            border-radius: var(--radius);
+            font-weight: 500;
+            opacity: 1;
+            transition: all .3s ease;
+
+            @include m.hover {
+                background-color: var(--color-accent);
+            }
+
+            &.clear {
+                color: var(--color-light);
+                background-color: var(--color-destructive);
+
+
+                @include m.hover {
+                    opacity: 0.9;
+                }
+            }
+
+            &.mode {
+                @include m.font-include(14, 16);
+
+                font-weight: 500;
+                padding-inline: 24px;
+            }
+
+            &.active {
+                background-color: var(--color-primary);
+                color: var(--color-light);
+
+                @include m.hover {
+                    opacity: 0.9;
+                }
+            }
+        }
+
+        &__actions {
+            display: flex;
+            column-gap: 12px;
+            width: 100%;
+            position: relative;
+        }
+
+        &__modes {
+            display: flex;
+            align-items: center;
+            column-gap: 12px;
+        }
+
+        &__color {
+            display: flex;
+            flex-direction: column;
+            row-gap: 4px;
+            align-items: start;
+            position: relative;
+            width: 100%;
+
+            &-body {
+                display: flex;
+                align-items: center;
+                column-gap: 8px;
+                position: relative;
+                width: 100%;
+            }
+
+            &-input {
+                @include m.square(32px);
+
+                background-color: var(--color-light);
+                border: var(--border);
+            }
+
+            &-view {
+                display: flex;
+                align-items: center;
+                justify-content: start;
+                height: 32px;
+                width: 100%;
+                background-color: var(--color-light);
+                border: var(--border);
+                padding-inline: var(--container-padding-x);
+                border-radius: var(--radius);
+            }
+        }
+
+        &__settings {
+            display: flex;
+            column-gap: 12px;
+        }
+
+        &__setting {
+            display: flex;
+            flex-direction: column;
+            row-gap: 4px;
+
+            input[type="number"] {
+                background-color: var(--color-background);
+                border-radius: var(--radius);
+                border: var(--border);
+                padding-inline: var(--container-padding-x);
+                padding-block: 12px;
+            }
+
+            input[type="range"] {
+                -webkit-appearance: none;
+                width: 100%;
+                height: 8px;
+                border-radius: 10px;
+                outline: none;
+
+                &::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 20px;
+                    height: 20px;
+                    background: var(--color-light);
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: 2px solid var(--color-dark);
+                    box-shadow: var(--shadow);
+                }
+
+                &::-moz-range-thumb {
+                    width: 14px;
+                    height: 14px;
+                    background: #333;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    border: 2px solid #fff;
+                }
+            }
+        }
+    }
+}
