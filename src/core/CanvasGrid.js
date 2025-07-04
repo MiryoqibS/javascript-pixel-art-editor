@@ -3,24 +3,33 @@ export class CanvasGrid {
         this._gridHeight = 16;
         this._gridWidth = 16;
         this._cellSize = 20;
-        this._currentColor = "#000000";
         this._cellColor = "#FFFFFF";
-        this._strokeColor = "#cccccc";
+        this._currentColor = "#000000"; // Текущий цвет по умолчанию
+        this._strokeColor = "#cccccc"; // Цвет обводки по умолчанию
+        this._strokeStyle = "solid"; // Стиль обводки по умолчанию
+        this._strokeWidth = 1; // Ширина обводки по умолчанию
 
         this.grid = this.createGrid();
     }
 
     // Создание сетки
-    createGrid() {
+    createGrid(oldGrid = []) {
         const grid = [];
 
         for (let row = 0; row < this.gridHeight; row++) {
             const rowGrid = [];
-            
+
             for (let col = 0; col < this.gridWidth; col++) {
-                rowGrid.push({ color: this.cellColor });
+                const oldGridRow = oldGrid[row];
+                const oldGridCell = oldGridRow && oldGridRow[col] ? oldGridRow[col] : null;
+
+                if (oldGridCell && oldGridCell.color !== this.cellColor) {
+                    rowGrid.push({ color: oldGrid[row][col].color });
+                } else {
+                    rowGrid.push({ color: this.cellColor });
+                };
             };
-                
+
             grid.push(rowGrid);
         };
 
@@ -65,6 +74,15 @@ export class CanvasGrid {
         this._cellColor = color;
     }
 
+    // Стиль обводки стеки
+    get strokeStyle() {
+        return this._strokeStyle;
+    }
+
+    set strokeStyle(style) {
+        this._strokeStyle = style;
+    }
+
     // Цвет обводки ячейки
     get strokeColor() {
         return this._strokeColor;
@@ -72,6 +90,15 @@ export class CanvasGrid {
 
     set strokeColor(color) {
         this._strokeColor = color;
+    }
+
+    // Ширина обводки ячейки
+    get strokeWidth() {
+        return this._strokeWidth;
+    }
+
+    set strokeWidth(width) {
+        this._strokeWidth = width;
     }
 
     // Высота сетки

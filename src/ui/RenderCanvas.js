@@ -1,6 +1,7 @@
 export class RenderCanvas {
     constructor(grid) {
         this.grid = grid;
+        this._showStroke = true;
     }
 
     // Инициализация
@@ -44,8 +45,10 @@ export class RenderCanvas {
 
                 ctx.fillStyle = color;
                 ctx.fillRect(col * size, row * size, size, size);
-                ctx.strokeStyle = this.grid.strokeColor;
-                ctx.strokeRect(col * size, row * size, size, size);
+                if (this.showStroke) {
+                    ctx.strokeStyle = this.grid.strokeColor;
+                    ctx.strokeRect(col * size, row * size, size, size);
+                };
             };
         };
 
@@ -96,16 +99,17 @@ export class RenderCanvas {
             for (let col = 0; col < cols; col++) {
                 ctx.fillStyle = this.grid.cellColor;
                 ctx.fillRect(col * size, row * size, size, size);
-                ctx.strokeStyle = this.grid.strokeColor;
-                ctx.strokeRect(col * size, row * size, size, size);
+
+                if (this.showStroke) {
+                    ctx.strokeStyle = this.grid.strokeColor;
+                    ctx.strokeRect(col * size, row * size, size, size);
+                };
             };
         };
     }
 
     // Рендер
     render() {
-        console.log(this.grid);
-
         const rows = this.grid.gridHeight;
         const cols = this.grid.gridWidth;
         const size = this.grid.cellSize;
@@ -122,12 +126,43 @@ export class RenderCanvas {
                 const color = this.grid.getCellColor(row, col);
                 ctx.fillStyle = color;
                 ctx.fillRect(col * size, row * size, size, size);
-                ctx.strokeStyle = this.grid.strokeColor;
-                ctx.strokeRect(col * size, row * size, size, size);
+
+                if (this.showStroke) {
+                    ctx.lineWidth = this.grid.strokeWidth;
+                    ctx.strokeStyle = this.grid.strokeColor;
+                    ctx.strokeRect(col * size, row * size, size, size);
+                    
+                    switch (this.grid.strokeStyle) {
+                        case "solid":
+                            ctx.setLineDash([]);
+                            ctx.lineCap = "butt";
+                            break;
+                        case "dashed":
+                            ctx.setLineDash([5, 3]);
+                            ctx.lineCap = "butt";
+                            break;
+                        case "dotted":
+                            ctx.setLineDash([1, 3]);
+                            ctx.lineCap = "round";
+                            break;
+                        default:
+                            ctx.setLineDash([]);
+                            ctx.lineCap = "butt";
+                            break;
+                    };
+                };
             };
         };
 
-
         return canvas;
+    }
+
+    // показать-ли обводку сетки
+    get showStroke() {
+        return this._showStroke;
+    }
+
+    set showStroke(value) {
+        this._showStroke = value;
     }
 }

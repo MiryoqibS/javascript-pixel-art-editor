@@ -7,5 +7,6 @@
 @use "./styles/commons";
 
 // Компоненты
-@use "./styles/pixel-editor";
-@use "./styles/toolbar";
+@use "./styles/components/Pixel-Editor/pixel-editor";
+@use "./styles/components/Toolbar/toolbar";
+@use "./styles/components/Toggle/toggle";

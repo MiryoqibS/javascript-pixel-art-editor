@@ -12,7 +12,7 @@ class Helper {
         svg.setAttribute("height", size);
 
         const use = document.createElementNS(SVG_NS, "use");
-        use.setAttributeNS(XLINK_NS, "xlink:href", `/sprites.svg#icon-${icon}`);
+        use.setAttributeNS(XLINK_NS, "xlink:href", `/public/sprites.svg#icon-${icon}`);
 
         svg.appendChild(use);
 

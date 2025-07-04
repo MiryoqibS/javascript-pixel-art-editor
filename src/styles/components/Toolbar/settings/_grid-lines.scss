@@ -1,0 +1,107 @@
+@use "../../../mixins" as m;
+
+.grid-lines {
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    // Тогглер для изменение видимости обводки 
+    &__visibility {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+        color: var(--color-dark);
+        cursor: pointer;
+    }
+
+    // Основная часть настроек
+    &__main {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    // Общие стили
+    &__color,
+    &__style {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        row-gap: 6px;
+    }
+
+    // Выбор цвета обводки
+    &__color {
+        &-body {
+            display: flex;
+            align-items: center;
+            column-gap: 8px;
+        }
+    }
+
+    // Выбор стиля обводки
+    &__style {
+        position: relative;
+
+        &-select {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding-inline: 10px;
+            height: 32px;
+            border-radius: var(--radius);
+            border: var(--border);
+            background-color: var(--color-light);
+        }
+
+        &-options {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            row-gap: 4px;
+            position: absolute;
+            top: 60px;
+            width: 100%;
+            padding: 4px 8px;
+            left: 0;
+            background-color: var(--color-light);
+            z-index: 999;
+            border-radius: var(--radius);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            opacity: 1;
+            visibility: visible;
+            transition: all .05s ease;
+
+            &.hide {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        &-option {
+            background-color: var(--color-light);
+            border-radius: var(--radius);
+            width: 100%;
+            font-weight: 500;
+            padding: 6px 8px;
+
+            &.selected {
+                background-color: var(--color-accent);
+                color: var(--color-light);
+            }
+
+            @include m.hover {
+                background-color: var(--color-accent);
+                color: var(--color-light);
+            }
+        }
+    }
+
+    // Ширина обводки сетки
+    &__width {
+        
+    }
+}

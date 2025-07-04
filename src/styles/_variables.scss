@@ -2,11 +2,12 @@
     --color-light: #fff;
     --color-dark: #333;
     --color-background: #f9fafb;
+    --color-gray-light: #e5e7eb;
     --color-primary: #3c83f6;
     --color-destructive: #ef4343;
     --color-accent: #f5930a;
 
-    --border: 1px solid #e5e7eb;
+    --border: 1px solid var(--color-gray-light);
 
     --container-width: 1200px;
     --container-padding-x: 15px;
