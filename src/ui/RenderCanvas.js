@@ -2,6 +2,12 @@ export class RenderCanvas {
     constructor(grid) {
         this.grid = grid;
         this._showStroke = true;
+        this._prevMode = null;
+
+        this._offsetX = 0;
+        this._offsetY = 0;
+        this._isDragging = false;
+        this._lastMousePos = { x: 0, y: 0 };
     }
 
     // Инициализация
@@ -26,18 +32,26 @@ export class RenderCanvas {
 
     // Добавляем обработчик событий для canvas
     setEventListener(canvas, ctx, cellSize) {
-        let isDrawing = false;
-        let isCleaning = false;
+        let isPainting = false;
+
         const size = cellSize;
 
         // Обработчик для покраски поля
-        const draw = (e, color) => {
+        const paint = (e, isLeftMouseClick = true) => {
+            const activeMode = this.grid.activeMode;
+
+            if (activeMode === "move") return;
+
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
             const row = Math.floor(y / cellSize);
             const col = Math.floor(x / cellSize);
+
+            const color = isLeftMouseClick
+                ? (this.grid.activeMode === "erase" ? this.grid.cellColor : this.grid.currentColor)
+                : this.grid.cellColor;
 
             // Перерисовать только одну ячейку
             if (row >= 0 && row < this.grid.gridHeight && col >= 0 && col < this.grid.gridWidth) {
@@ -54,32 +68,69 @@ export class RenderCanvas {
 
         canvas.addEventListener("mousedown", (e) => {
             if (e.button === 0) {
-                isDrawing = true;
-                isCleaning = false;
-                draw(e, this.grid.currentColor);
+                if (this.grid.activeMode === "draw") {
+                    isPainting = true;
+                    paint(e);
+                };
+
+                if (this.grid.activeMode === "erase") {
+                    isPainting = true;
+                    paint(e);
+                };
+
+                if (this.grid.activeMode === "move") {
+                    this._isDragging = true;
+                    this._lastMousePos = { x: e.clientX, y: e.clientY };
+                };
+            } else if (e.button === 1) {
+                // Сохраняем предыдущий режим
+                this._prevMode = this.grid.activeMode
+
+                this.grid.activeMode = "move";
+                this._isDragging = true;
+                this._lastMousePos = { x: e.clientX, y: e.clientY };
             } else if (e.button === 2) {
-                isDrawing = false;
-                isCleaning = true;
-                draw(e, this.grid.cellColor);
+                // Сохраняем предыдущий режим
+                this._prevMode = this.grid.activeMode
+
+                this.grid.activeMode = "erase";
+                paint(e);
             };
         });
 
         canvas.addEventListener("mousemove", (e) => {
-            if (isDrawing) {
-                draw(e, this.grid.currentColor);
-            } else if (isCleaning) {
-                draw(e, this.grid.cellColor);
+            if (isPainting) {
+                paint(e);
+            };
+
+            if (this._isDragging) {
+                const dx = e.clientX - this._lastMousePos.x;
+                const dy = e.clientY - this._lastMousePos.y;
+
+                this._offsetX += dx;
+                this._offsetY += dy;
+
+                this._lastMousePos = { x: e.clientX, y: e.clientY };
+                canvas.style.transform = `translate(${this._offsetX}px, ${this._offsetY}px)`;
             };
         });
 
         canvas.addEventListener("mouseleave", () => {
-            isDrawing = false;
-            isCleaning = false;
+            isPainting = false;
         });
 
-        window.addEventListener("mouseup", () => {
-            isDrawing = false;
-            isCleaning = false;
+        canvas.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        });
+
+        window.addEventListener("mouseup", (e) => {
+            isPainting = false;
+            this._isDragging = false;
+
+            if (([1,2].includes(e.button)) && this._prevMode) {
+                this.grid.activeMode = this._prevMode;
+                this._prevMode = null;
+            };
         });
     }
 
@@ -131,7 +182,7 @@ export class RenderCanvas {
                     ctx.lineWidth = this.grid.strokeWidth;
                     ctx.strokeStyle = this.grid.strokeColor;
                     ctx.strokeRect(col * size, row * size, size, size);
-                    
+
                     switch (this.grid.strokeStyle) {
                         case "solid":
                             ctx.setLineDash([]);
@@ -153,6 +204,9 @@ export class RenderCanvas {
                 };
             };
         };
+
+        canvas.style.position = "relative";
+        canvas.style.transform = `translate(${this._offsetX}px, ${this._offsetY}px)`;
 
         return canvas;
     }

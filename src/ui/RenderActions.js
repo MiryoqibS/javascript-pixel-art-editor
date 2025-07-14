@@ -68,16 +68,24 @@ class RenderActions {
         // Контейнер для кнопок режимов
         const toolsContainer = document.createElement("div");
         toolsContainer.className = "toolbar-action__modes";
-        let isFirstMode = true;
-
-        toolbarLogic.modes.forEach(mode => {
+        const modes = toolbarLogic.getModes();
+        modes.forEach(mode => {
             const toolButton = document.createElement("div");
             toolButton.className = "toolbar-action__button mode";
-            if (isFirstMode) {
+
+            if (mode == "draw") {
                 toolButton.classList.add("active");
-                isFirstMode = false;
-            }
-            toolButton.innerText = helper.capitalize(mode.name);
+            };
+
+            toolButton.innerText = helper.capitalize(mode);
+
+            toolButton.addEventListener("click", () => {
+                const prevActiveButton = document.querySelector(".toolbar-action__button.mode.active");
+                prevActiveButton.classList.remove("active");
+                toolButton.classList.add("active");
+                toolbarLogic.changeMode(mode);
+            });
+
             toolsContainer.appendChild(toolButton);
         });
 

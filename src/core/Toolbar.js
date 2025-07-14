@@ -1,19 +1,11 @@
 export class Toolbar {
     constructor(canvasGrid, canvasGridRender) {
-        this.canvasGrid = canvasGrid,
-            this.canvasGridRender = canvasGridRender;
-        // Режимы
-        this.modes = [
-            {
-                name: "draw"
-            },
-            {
-                name: "erase"
-            },
-            {
-                name: "move"
-            }
-        ]
+        this.canvasGrid = canvasGrid;
+        this.canvasGridRender = canvasGridRender;
+    }
+
+    getModes() {
+        return this.canvasGrid.modes
     }
 
     // Обновление Canvas
@@ -54,6 +46,11 @@ export class Toolbar {
     setCellSize(size) {
         this.canvasGrid.cellSize = Number(size);
         this.updateCanvas();
+    }
+
+    changeMode(mode) {        
+        if (!this.canvasGrid.modes.includes(mode)) return;
+        this.canvasGrid.activeMode = mode;
     }
 
     // Получение стиля обводки Canvas

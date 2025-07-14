@@ -10,6 +10,17 @@ export class CanvasGrid {
         this._strokeWidth = 1; // Ширина обводки по умолчанию
 
         this.grid = this.createGrid();
+
+        this.modes = ["draw", "erase", "move"];
+        this._activeMode = "draw";
+    }
+
+    get activeMode() {
+        return this._activeMode;
+    }
+
+    set activeMode(mode) {
+        this._activeMode = mode; 
     }
 
     // Создание сетки
